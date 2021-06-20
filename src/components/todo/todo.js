@@ -56,7 +56,7 @@ const [list,setList]=useState([]);
         <Nav.Link style={{ color:'white' }} href="#home"><h4>Home</h4></Nav.Link>
         </Navbar>
           <header>
-            <h2 style={{ textAlign:"center",backgroundColor:"black",color:"white",marginLeft:"435px",width:"719px",padding:"10px",marginTop:"20px"}}>
+            <h2 style={{backgroundColor:"black",color:"white",marginLeft:"80px",marginRight:"100px",width:"1200px",padding:"10px",marginTop:"20px"}}>
             To Do List Manager ({list.filter(item => !item.complete).length}) 
             </h2>
           </header>
