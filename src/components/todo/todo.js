@@ -26,6 +26,16 @@ const [list,setList]=useState([]);
     let newList = list.filter((i) => i._id !== id) || {};
     setList(newList);
   };
+  const updateItem = (id, val) => {
+    let item = list.filter(i => i._id === id)[0] || {};
+
+    console.log(val);
+    if (item._id) {
+      item.text = val;
+      let newList = list.map(listItem => listItem._id === item._id ? item : listItem);
+      setList(newList);
+    }
+  }
   const toggleComplete = (id) => {
 
     let item = list.filter(i => i._id === id)[0] || {};
@@ -75,6 +85,7 @@ const [list,setList]=useState([]);
                 list={list}
                 handleComplete={toggleComplete}
                 deleteItem={deleteItem}
+                updateItem={updateItem}
               />
             </div>
           </section>
