@@ -22,7 +22,10 @@ const [list,setList]=useState([]);
     item.complete = false;
     setList([...list, item]);
   };
-
+  const deleteItem = (id) => {
+    let newList = list.filter((i) => i._id !== id) || {};
+    setList(newList);
+  };
   const toggleComplete = (id) => {
 
     let item = list.filter(i => i._id === id)[0] || {};
@@ -71,6 +74,7 @@ const [list,setList]=useState([]);
               <TodoList
                 list={list}
                 handleComplete={toggleComplete}
+                deleteItem={deleteItem}
               />
             </div>
           </section>
