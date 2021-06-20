@@ -1,6 +1,6 @@
 # todo
 
-[deployed link](https://60cf76a825ba790008657c3c--priceless-fermi-d3b36f.netlify.app)
+[deployed link](https://60cf8a8211f9040007744962--priceless-fermi-d3b36f.netlify.app)
 
 ## UML Diagram
 
