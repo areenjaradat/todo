@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-
+import Button from 'react-bootstrap/Button';
 
 function TodoList(props) {
     return (
@@ -11,7 +11,9 @@ function TodoList(props) {
               <span type="onClick" onClick={() => props.handleComplete(item._id)}>
                 {item.text}
               </span>
+              <Button  onClick={() => props.deleteItem(item._id)}>X</Button>
             </ListGroup.Item>
+              
           ))}
         </ListGroup >
       );
