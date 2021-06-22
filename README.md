@@ -1,10 +1,11 @@
 # todo
 
-# lab32
+## lab32
 
 [deployed link](https://60d092c7eff120000760c866--priceless-fermi-d3b36f.netlify.app)
 
-# lab31
+## lab31
+
 [deployed link](https://60cf8a8211f9040007744962--priceless-fermi-d3b36f.netlify.app)
 
 ## UML Diagram

@@ -1,97 +1,100 @@
-import React, { useEffect, useState } from 'react';
+  
+import React, { useEffect, useContext } from 'react';
+import { When } from 'react-if';
 import TodoForm from './form.js';
 import TodoList from './list.js';
-
+import Pagination from './pagination.js';
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-
-
+import { SiteContext } from '../../context/site';
+import useAjax from '../../hooks/useAjax';
+import './todo.scss'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './todo.scss';
 
-function ToDo () {
+function ToDo() {
+  const context = useContext(SiteContext);
+  const [getItems,addItems,deleteItems,updateItems] = useAjax();
 
-  useEffect(() => {
-    document.title = `To Do List: ${list.filter(item => !item.complete).length}`;
-  })
-
-const [list,setList]=useState([]);
-
- const addItem = (item) => {
-  console.log(item)
-    item._id = Math.random();
-    item.complete = false;
-    setList([...list, item]);
+  const addItem = (item) => {
+    if(!item.difficulty) {
+      item.difficulty = 1;
+    }
+    item.completed = 'pending';
+    console.log(item);
+    addItems(item, newItem => context.setList([...context.list, newItem]));
   };
-  const deleteItem = (id) => {
-    let newList = list.filter((i) => i._id !== id) || {};
-    setList(newList);
+
+  const toggleComplete = id => {
+    let item = context.list.filter(i => i._id === id)[0] || {};
+    let status = item.completed;
+    let temp = '';
+    if (item._id) {
+      if (status === "pending") temp = "in-progress";
+      if (status === "in-progress") temp = "complete";
+      if (status === "complete") temp = "pending";
+      item.completed = temp;
+      updateItems(id, item , (newItem) => context.setList(context.list.map(listItem => listItem._id === item._id ? newItem : listItem)));
+    }
   };
+
   const updateItem = (id, val) => {
-    let item = list.filter(i => i._id === id)[0] || {};
+    let item = context.list.filter(i => i._id === id)[0] || {};
 
-    console.log(val);
     if (item._id) {
       item.text = val;
-      let newList = list.map(listItem => listItem._id === item._id ? item : listItem);
-      setList(newList);
+      updateItems(id, item , (newItem) => context.setList(context.list.map(listItem => listItem._id === item._id ? newItem : listItem)));
     }
   }
-  const toggleComplete = (id) => {
 
-    let item = list.filter(i => i._id === id)[0] || {};
-    console.log(item)
+  const deleteItem = id => {
+    let item = context.list.filter(i => i._id === id)[0] || {};
+
     if (item._id) {
-      item.complete = !item.complete;
-      let list1 = list.map(listItem => listItem._id === item._id ? item : listItem);
-      setList(list1);
+      deleteItems(id, () => context.setList(context.list.filter(listItem => listItem._id !== id)));
     }
-
-  };
+  }
 
   useEffect(() => {
-    let listInfo = [
-      { _id: 1, complete: false, text: 'Clean the Kitchen', difficulty: 3, assignee: 'Person A' },
-      { _id: 2, complete: false, text: 'Do the Laundry', difficulty: 2, assignee: 'Person A' },
-      { _id: 3, complete: false, text: 'Walk the Dog', difficulty: 4, assignee: 'Person B' },
-      { _id: 4, complete: true, text: 'Do Homework', difficulty: 3, assignee: 'Person C' },
-      { _id: 5, complete: false, text: 'Take a Nap', difficulty: 1, assignee: 'Person B' },
-    ];
-
-    setList(listInfo);
+    getItems(context.setList);
   }, [])
 
+  useEffect(() => {
+    const itemsToDo = context.list.filter(item => item.completed === 'pending').length;
+    document.title = `${itemsToDo} item(s) to complete`
+  })
 
+  return (
+    <>
+      <Navbar bg="primary" expand="lg">
+        <Navbar.Brand className="brand" href="#home">HOME</Navbar.Brand>
+        
+      </Navbar>
+      <header>
+        <h6 className="counter-Header">
+          To Do List Manager ({context.list.filter(item => item.completed === 'pending').length})
+          </h6>
+      </header>
+      <section className="todo">
+        <div>
+          <TodoForm 
+          addItem={addItem} 
+          />
+        </div>
+        <div>
+          <TodoList
+            // list={list}
+            toggleComplete={toggleComplete}
+            deleteItem={deleteItem}
+            updateItem={updateItem}
+          />
+          <When condition={context.pages > 1}>
+            <Pagination/>
+          </When>
+        </div>
+      </section>
+    </>
+  );
 
-
-    return (
-      <>
-     <Navbar bg="primary">
-        <Nav.Link style={{ color:'white' }} href="#home"><h4>Home</h4></Nav.Link>
-        </Navbar>
-          <header>
-            <h2 style={{backgroundColor:"black",color:"white",marginLeft:"80px",marginRight:"100px",width:"1200px",padding:"10px",marginTop:"20px"}}>
-            To Do List Manager ({list.filter(item => !item.complete).length}) 
-            </h2>
-          </header>
-          
-          <section className="todo">
-  
-            <div>
-              <TodoForm handleSubmit={addItem} />
-            </div>
-  
-            <div>
-              <TodoList
-                list={list}
-                handleComplete={toggleComplete}
-                deleteItem={deleteItem}
-                updateItem={updateItem}
-              />
-            </div>
-          </section>
-      </>
-    );
-  }
-
+}
 
 export default ToDo;
