@@ -1,14 +1,15 @@
-// import React, { useEffect, useState } from 'react';
+ import React, { useEffect, useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 
+// import { SiteContext } from '../context/site.js';
 
-import useForm from '../../kooks/useForm';
+import useForm from '../../hooks/useForm';
 
 
 function TodoForm(props) {
-  
+  // const context = useContext(SiteContext);
   const [handleSubmit,handleInputChange] = useForm(props.addItem);
 
   return (
