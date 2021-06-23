@@ -2,7 +2,7 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-
+import { AuthContext } from '../../context/auth';
 // import { SiteContext } from '../context/site.js';
 
 import useForm from '../../hooks/useForm';
@@ -11,12 +11,18 @@ import useForm from '../../hooks/useForm';
 function TodoForm(props) {
   // const context = useContext(SiteContext);
   const [handleSubmit,handleInputChange] = useForm(props.addItem);
-
+  const authContext = useContext(AuthContext);
   return (
     <>
      <Card style={{ width: '24rem', height: '25rem' ,padding: '10px' }}>
       <h3>Add Item</h3>
-      <Form onSubmit={handleSubmit} style={{ margin: '20px' }}>
+      <Form onSubmit={async (e) => {
+            if (authContext.user.capabilities.includes('create')) {
+              await handleSubmit;
+            } else {
+              alert("You don't have the permession to create!");
+            }
+          }} style={{ margin: '20px' }}>
       <Form.Label>
           <span>To Do Item</span>
           <Form.Control

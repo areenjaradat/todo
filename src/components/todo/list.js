@@ -8,8 +8,11 @@ import { FormControl } from 'react-bootstrap';
 import useForm from '../../hooks/useForm';
 // import './list.scss';
 import usePagination from '../../hooks/paginationHook.js';
+import { AuthContext } from '../../context/auth';
+
 
 export default function TodoList(props) {
+  const authContext = useContext(AuthContext);
   const context = useContext(SiteContext);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState('');
@@ -61,7 +64,7 @@ export default function TodoList(props) {
 
 
   // sort by text, name and difficulty
-  console.log(filteredList);
+  //console.log(filteredList);
   if (context.sortSelected === 'name') {
     filteredList.sort((a, b) => {
       if (a.assignee.toLowerCase() > b.assignee.toLowerCase()) return 1;
@@ -105,9 +108,21 @@ export default function TodoList(props) {
         <div>
           <Modal.Dialog style={{ width: '40vw' }} key={item._id} className="m-2 shadow">
             <Modal.Header >
-              <Button style={{ width: '85px', fontSize: '10px', borderRadius: '20px' }} action onClick={() => props.toggleComplete(item._id)} variant={status(item.completed)} className={`complete-${item.completed}`}>{item.completed}</Button>
+              <Button style={{ width: '85px', fontSize: '10px', borderRadius: '20px' }} action onClick={async () => {
+                if (authContext.user.capabilities.includes('update')) {
+                  await props.toggleComplete(item._id)
+                } else {
+                  alert("You don't have the permession to update!");
+                }
+              } } variant={status(item.completed)} className={`complete-${item.completed}`}>{item.completed}</Button>
               <Modal.Title className="ml-0">{item.assignee}</Modal.Title>
-              <Button variant="none" onClick={() => props.deleteItem(item._id)}>X</Button>
+              <Button variant="none" onClick={async () => {
+            if (authContext.user.capabilities.includes('delete')) {
+              await props.deleteItem(item._id);
+            } else {
+              alert("You don't have the permession to delete!");
+            }
+          }}>X</Button>
             </Modal.Header>
 
             <Modal.Body>
@@ -116,7 +131,14 @@ export default function TodoList(props) {
             </Modal.Body>
 
             <Modal.Footer>
-              <Button variant="primary" onClick={() => { handleShow(); toggleField(item._id) }}>Update Item</Button>
+              <Button variant="primary" onClick={async () => {
+                if (authContext.user.capabilities.includes('update')) {
+                  await handleShow(); 
+                  await toggleField(item._id);
+                } else {
+                  alert("You don't have the permession to update!");
+                }
+              }}>Update Item</Button>
             </Modal.Footer>
           </Modal.Dialog>
 
