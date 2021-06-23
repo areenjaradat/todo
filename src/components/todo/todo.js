@@ -65,10 +65,10 @@ function ToDo() {
 
   return (
     <>
-      <Navbar bg="primary" expand="lg">
+      {/* <Navbar bg="primary" expand="lg">
         <Navbar.Brand className="brand" href="#home">HOME</Navbar.Brand>
         
-      </Navbar>
+      </Navbar> */}
       <header>
         <h6 className="counter-Header">
           To Do List Manager ({context.list.filter(item => item.completed === 'pending').length})
