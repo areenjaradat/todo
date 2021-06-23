@@ -2,7 +2,7 @@
 
 ## lab34
 
-[deployed link](https://60d22626f6b2ed000820b263--priceless-fermi-d3b36f.netlify.app)
+[deployed link](https://60d34c22a1d9cb000703de74--priceless-fermi-d3b36f.netlify.app/?text=&difficulty=1&assignee=)
 
 ![UML Lab34](assest/lab34-2.jpg)
 
